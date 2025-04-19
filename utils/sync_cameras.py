@@ -1,31 +1,31 @@
+# utils/sync_cameras.py
+
 import cv2
 import numpy as np
 
-def sync_videos(video1_path, video2_path):
-    cap1 = cv2.VideoCapture(video1_path)
-    cap2 = cv2.VideoCapture(video2_path)
+def synchronize_frames(back_video_path, side_video_path):
+    print(f"🔄 Syncing frames from:\nBack: {back_video_path}\nSide: {side_video_path}")
+
+    cap_back = cv2.VideoCapture(back_video_path)
+    cap_side = cv2.VideoCapture(side_video_path)
+
+    frame_pairs = []
     
-    orb = cv2.ORB_create()
+    while cap_back.isOpened() and cap_side.isOpened():
+        ret_back, frame_back = cap_back.read()
+        ret_side, frame_side = cap_side.read()
 
-    while cap1.isOpened() and cap2.isOpened():
-        ret1, frame1 = cap1.read()
-        ret2, frame2 = cap2.read()
-
-        if not ret1 or not ret2:
+        if not ret_back or not ret_side:
             break
 
-        keypoints1, descriptors1 = orb.detectAndCompute(frame1, None)
-        keypoints2, descriptors2 = orb.detectAndCompute(frame2, None)
+        # Optional: Resize to same dimensions
+        frame_back = cv2.resize(frame_back, (640, 360))
+        frame_side = cv2.resize(frame_side, (640, 360))
 
-        bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-        matches = bf.match(descriptors1, descriptors2)
+        frame_pairs.append((frame_back, frame_side))
 
-        matches = sorted(matches, key=lambda x: x.distance)
+    cap_back.release()
+    cap_side.release()
 
-        # If sufficient matches found, sync frames
-        if len(matches) > 10:
-            print("Frames synced!")
-            break
-
-    cap1.release()
-    cap2.release()
+    print(f"✅ Synchronized {len(frame_pairs)} frame pairs.")
+    return frame_pairs
