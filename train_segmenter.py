@@ -32,35 +32,13 @@ def load_dataset(file_list):
             labels = f.read().splitlines()
 
         if len(feats) != len(labels):
-            print(f"⚠️ Length mismatch: {file} — Features: {len(feats)} vs Labels: {len(labels)}")
+            print(f"⚠️ Mismatch in feature/label length: {file} → {len(feats)} vs {len(labels)}")
             continue
 
         X.extend(feats)
         y.extend(labels)
 
-    print(f"✅ Loaded {len(X)} samples")
-    return np.array(X), np.array(y)
-
-    X, y = [], []
-    for file in file_list:
-        feature_path = os.path.join(FEATURE_DIR, file.replace(".npy", "_features.npy"))
-        label_path = os.path.join(LABEL_DIR, file.replace(".npy", ".txt"))
-
-        if not os.path.exists(feature_path) or not os.path.exists(label_path):
-            print(f"❌ Missing feature or label file for {file}")
-            continue
-
-        feats = np.load(feature_path)
-        with open(label_path) as f:
-            labels = f.read().splitlines()
-
-        if len(feats) != len(labels):
-            print(f"⚠️ Mismatch in feature/label length: {file}")
-            continue
-
-        X.extend(feats)
-        y.extend(labels)
-
+    print(f"📦 Loaded {len(X)} samples from {len(file_list)} files.")
     return np.array(X), np.array(y)
 
 # === Main Training Logic ===
@@ -70,7 +48,8 @@ def main():
         train_files = f.read().splitlines()
     with open(TEST_LIST) as f:
         test_files = f.read().splitlines()
-
+    
+    print("📄 Test Files:", test_files) 
     print("📊 Loading feature data...")
     X_train, y_train = load_dataset(train_files)
     X_test, y_test = load_dataset(test_files)
