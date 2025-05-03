@@ -11,6 +11,31 @@ def load_classifier(model_path='models/svm_model.pkl'):
 # Example features: [hip_rotation, knee_angle, arm_extension...]
 def extract_features_from_pose_sequence(keypoints_3d):
     features = []
+    for joints in keypoints_3d:
+        if not isinstance(joints, (list, np.ndarray)) or len(joints) < 33:
+            features.append([0, 0, 0, 0])
+            continue
+
+        joints = np.array(joints)
+
+        # Torso length (distance between mid-shoulder and mid-hip)
+        shoulder = np.mean([joints[11], joints[12]], axis=0)
+        hip = np.mean([joints[23], joints[24]], axis=0)
+        torso_len = np.linalg.norm(shoulder - hip)
+
+        # Right knee angle: hip (23), knee (25), ankle (27)
+        knee_angle = np.linalg.norm(joints[23] - joints[25])
+
+        # Left elbow angle: shoulder (11), elbow (13), wrist (15)
+        elbow_angle = np.linalg.norm(joints[11] - joints[13])
+
+        # Hip width
+        hip_width = np.linalg.norm(joints[23] - joints[24])
+
+        features.append([torso_len, knee_angle, elbow_angle, hip_width])
+    return np.array(features)
+
+    features = []
     for pose in keypoints_3d:
         # Extract basic joint angle patterns from 3D pose
         hip_rotation = pose[8][1] - pose[11][1]  # dummy logic

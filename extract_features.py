@@ -10,32 +10,31 @@ def get_angle(a, b, c):
     cosine = np.dot(ba, bc) / (np.linalg.norm(ba) * np.linalg.norm(bc) + 1e-6)
     return np.degrees(np.arccos(np.clip(cosine, -1.0, 1.0)))
 
+def extract_joint_features(frame):
+    """
+    Returns consistent 4D features (same for training and prediction)
+    Uses: left/right hip x-coordinates and left/right shoulder y-coordinates
+    """
+    LEFT_HIP = 11
+    RIGHT_HIP = 12
+    LEFT_SHOULDER = 5
+    RIGHT_SHOULDER = 6
+
+    return [
+        frame[LEFT_HIP, 0],
+        frame[RIGHT_HIP, 0],
+        frame[LEFT_SHOULDER, 1],
+        frame[RIGHT_SHOULDER, 1],
+    ]
+
 def extract_features_from_3d(keypoints):
-    """
-    Converts 3D joint positions into simplified feature vectors (angles, distances)
-    For each frame: [torso length, right knee angle, left elbow angle, hip width]
-    """
     features = []
-    for joints in keypoints:  # joints: (J, 3)
-        if not isinstance(joints, (list, np.ndarray)) or len(joints) < 33:
+    for frame in keypoints:
+        if not isinstance(frame, (list, np.ndarray)) or len(frame) < 30:
             features.append([0, 0, 0, 0])
             continue
-
-        joints = np.array(joints)
-        shoulder = np.mean([joints[11], joints[12]], axis=0)  # shoulders
-        hip = np.mean([joints[23], joints[24]], axis=0)      # hips
-        torso_len = np.linalg.norm(shoulder - hip)
-
-        # Right knee angle: hip (23), knee (25), ankle (27)
-        knee_angle = get_angle(joints[23], joints[25], joints[27])
-
-        # Left elbow angle: shoulder (11), elbow (13), wrist (15)
-        elbow_angle = get_angle(joints[11], joints[13], joints[15])
-
-        # Hip width
-        hip_width = np.linalg.norm(joints[23] - joints[24])
-
-        features.append([torso_len, knee_angle, elbow_angle, hip_width])
+        frame = np.array(frame)
+        features.append(extract_joint_features(frame))
     return np.array(features)
 
 def save_all_features(data_dir="training_data", out_dir="features"):

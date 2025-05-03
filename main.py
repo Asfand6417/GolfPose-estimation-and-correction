@@ -78,12 +78,23 @@ def main():
         # Step 3: Reconstruct 3D pose using DLT
         keypoints_3d = reconstruct_3d_pose(keypoints_2d)
 
-        # === Save extracted 3D keypoints ===
-        os.makedirs("training_data", exist_ok=True)
-        swing_name = f"{quality}_{swing_type}_{int(time.time())}".replace(" ", "_")
-        np.save(f"training_data/{swing_name}.npy", np.array(keypoints_3d))
-        print(f"💾 Saved training_data/{swing_name}.npy")
+    #   # Flatten the 3D keypoints into a consistent shape
+    #     flattened_keypoints = []
+    #     for frame in keypoints_3d:
+    #         if frame:  # Check if frame is not empty
+    #             flattened_keypoints.append(np.concatenate([kp.flatten() for kp in frame]))
+    #         else:
+    #             print("Warning: Skipping empty frame.")
 
+    #     # Print the first 5 flattened keypoints for inspection
+    #     print(f"Flattened 3D Pose Sample: {flattened_keypoints[:5]}")  # Adjust the index if needed
+
+    #     # === Save extracted 3D keypoints ===
+    #     os.makedirs("training_data", exist_ok=True)
+    #     swing_name = f"{quality}_{swing_type}_{int(time.time())}".replace(" ", "_")
+    #     np.save(f"training_data/{swing_name}.npy", np.array(flattened_keypoints))
+    #     print(f"💾 Saved training_data/{swing_name}.npy")
+  
         # Step 4: Segment swing into phases using SVM or MLP
         swing_phases = segment_swing_phases(keypoints_3d)
 
