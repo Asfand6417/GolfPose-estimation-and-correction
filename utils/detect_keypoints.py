@@ -1,48 +1,24 @@
 # utils/detect_keypoints.py
 
-import cv2
-import mediapipe as mp
+from keypoint_extraction.openpose_keypoints import run_openpose, parse_openpose_json
+import os
 
-mp_pose = mp.solutions.pose
-pose = mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5)
+def extract_2d_keypoints(back_video_path, side_video_path, output_base_dir, openpose_bin_path):
+    back_json_dir = os.path.join(output_base_dir, 'json_back')
+    side_json_dir = os.path.join(output_base_dir, 'json_side')
+    back_vid_output = os.path.join(output_base_dir, 'rendered_back')
+    side_vid_output = os.path.join(output_base_dir, 'rendered_side')
 
-# Takes a list of (back_frame, side_frame) and extracts pose keypoints from both
-# For now, we'll only use one view (e.g., back) as example
+    print("📹 Running OpenPose on back view...")
+    run_openpose(back_video_path, back_json_dir, back_vid_output, openpose_bin_path)
 
-def extract_2d_keypoints(frame_pairs):
-    keypoints_back = []
-    keypoints_side = []
+    print("📹 Running OpenPose on side view...")
+    run_openpose(side_video_path, side_json_dir, side_vid_output, openpose_bin_path)
 
-    for i, (back_frame, side_frame) in enumerate(frame_pairs):
-        # BACK VIEW
-        back_rgb = cv2.cvtColor(back_frame, cv2.COLOR_BGR2RGB)
-        result_back = pose.process(back_rgb)
-        back_pts = [(lm.x, lm.y) for lm in result_back.pose_landmarks.landmark] if result_back.pose_landmarks else []
-        keypoints_back.append(back_pts)
+    print("🧠 Parsing keypoints from JSON...")
+    keypoints_back = parse_openpose_json(back_json_dir)
+    keypoints_side = parse_openpose_json(side_json_dir)
 
-        # SIDE VIEW
-        side_rgb = cv2.cvtColor(side_frame, cv2.COLOR_BGR2RGB)
-        result_side = pose.process(side_rgb)
-        side_pts = [(lm.x, lm.y) for lm in result_side.pose_landmarks.landmark] if result_side.pose_landmarks else []
-        keypoints_side.append(side_pts)
-
-    return list(zip(keypoints_back, keypoints_side))
-
-    print("📍 Extracting 2D keypoints using MediaPipe Pose...")
-    keypoints_list = []
-
-    for i, (back_frame, side_frame) in enumerate(frame_pairs):
-        frame_rgb = cv2.cvtColor(back_frame, cv2.COLOR_BGR2RGB)
-        results = pose.process(frame_rgb)
-
-        if results.pose_landmarks:
-            keypoints = []
-            for lm in results.pose_landmarks.landmark:
-                keypoints.append((lm.x, lm.y, lm.z))
-            keypoints_list.append(keypoints)
-        else:
-            print(f"❌ No pose detected in frame {i}")
-            keypoints_list.append([])
-
-    print(f"✅ Extracted keypoints from {len(keypoints_list)} frames.")
-    return keypoints_list
+    # Make sure lengths match
+    min_len = min(len(keypoints_back), len(keypoints_side))
+    return list(zip(keypoints_back[:min_len], keypoints_side[:min_len]))
