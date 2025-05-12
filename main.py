@@ -26,6 +26,7 @@ from utils.evaluate import evaluate_model
 def get_nested_video_pairs(base_path="data"):
     """
     Returns a list of tuples: (swing_quality, swing_type, back_view_video, side_view_video)
+    Handles both nested directories and direct .mp4 files.
     """
     pairs = []
 
@@ -34,10 +35,16 @@ def get_nested_video_pairs(base_path="data"):
         side_quality_path = os.path.join(base_path, "Side View", swing_quality)
 
         if not os.path.exists(back_quality_path) or not os.path.exists(side_quality_path):
-            print(f"Missing directory: {back_quality_path} or {side_quality_path}")
+            print(f"❌ Missing directory: {back_quality_path} or {side_quality_path}")
             continue
 
-        for swing_type in os.listdir(back_quality_path):
+        # CASE 1: Nested folders by swing type
+        if all(os.path.isdir(os.path.join(back_quality_path, d)) for d in os.listdir(back_quality_path)):
+            swing_types = os.listdir(back_quality_path)
+        else:
+            swing_types = [""]  # no subfolder
+
+        for swing_type in swing_types:
             back_swing_path = os.path.join(back_quality_path, swing_type)
             side_swing_path = os.path.join(side_quality_path, swing_type)
 
@@ -45,18 +52,24 @@ def get_nested_video_pairs(base_path="data"):
                 print(f"⚠️ Warning: Side view folder missing for {swing_type} in {swing_quality}")
                 continue
 
-            back_videos = sorted([f for f in os.listdir(back_swing_path) if f.endswith(".mp4")])
-            side_videos = sorted([f for f in os.listdir(side_swing_path) if f.endswith(".mp4")])
+            back_videos = sorted([
+                os.path.join(back_swing_path, f) for f in os.listdir(back_swing_path)
+                if f.endswith(".mp4")
+            ]) if os.path.isdir(back_swing_path) else [back_swing_path]
+
+            side_videos = sorted([
+                os.path.join(side_swing_path, f) for f in os.listdir(side_swing_path)
+                if f.endswith(".mp4")
+            ]) if os.path.isdir(side_swing_path) else [side_swing_path]
 
             if len(back_videos) != len(side_videos):
                 print(f"⚠️ Mismatch in number of videos for {swing_type}: {len(back_videos)} back vs {len(side_videos)} side")
 
-            for back_vid, side_vid in zip(back_videos, side_videos):
-                back_full = os.path.join(back_swing_path, back_vid)
-                side_full = os.path.join(side_swing_path, side_vid)
-                pairs.append((swing_quality, swing_type, back_full, side_full))
+            for b, s in zip(back_videos, side_videos):
+                pairs.append((swing_quality, swing_type or 'direct', b, s))
 
     return pairs
+
 
 # ========== Main Pipeline ==========
 def main():
@@ -73,7 +86,14 @@ def main():
         frame_pairs = synchronize_frames(back_path, side_path)
 
         # Step 2: Detect 2D keypoints using a pose estimation model
-        keypoints_2d = extract_2d_keypoints(frame_pairs)
+        # keypoints_2d = extract_2d_keypoints(frame_pairs)
+        keypoints_2d = extract_2d_keypoints(
+    back_path,
+    side_path,
+    output_base_dir="output/openpose_keypoints",
+    openpose_bin_path="F:/openpose/build/x64/Release"  # Replace with your path
+)
+
 
         # Step 3: Reconstruct 3D pose using DLT
         keypoints_3d = reconstruct_3d_pose(keypoints_2d)
