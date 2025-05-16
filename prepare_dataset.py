@@ -19,14 +19,13 @@ train_files = files
 test_files = []
 
 # Save
-with open("training_data/train_files.txt", "w") as f:
+with open("train_files.txt", "w") as f:
     for file in train_files:
         f.write(file + "\n")
 
-with open("training_data/test_files.txt", "w") as f:
+with open("test_files.txt", "w") as f:
     for file in test_files:
         f.write(file + "\n")
-
 
 print(f"✅ Forced 1 file into training.")
 
