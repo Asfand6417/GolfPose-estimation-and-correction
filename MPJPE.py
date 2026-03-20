@@ -7,4 +7,4 @@ predicted = np.array([[1, 2, 3], [4, 5, 6]])
 ground_truth = np.array([[1.1, 2.1, 3.1], [3.9, 4.9, 5.9]])
 
 error = mpjpe(predicted, ground_truth)
-print("MPJPE Error:", error)
+print("MPJPE Error:", error) 
