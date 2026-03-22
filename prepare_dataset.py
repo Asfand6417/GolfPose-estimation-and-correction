@@ -11,7 +11,7 @@ random.shuffle(files)
 # Split (e.g., 80% train, 20% test)
 split = int(0.8 * len(files))
 train_files = files[:split]
-test_files = files[split:]
+test_files = files[split:] 
 
 
 # Split logic override for single file
