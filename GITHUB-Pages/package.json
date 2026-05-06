@@ -1,6 +1,5 @@
 {
   "name": "react-example",
-  "description": "Multiview Golf Swing Analysis and Correction Landing Page",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,10 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "deploy:clean": "npm run clean && npm run deploy"
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

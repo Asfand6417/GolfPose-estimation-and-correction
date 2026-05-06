@@ -8,10 +8,6 @@ export default defineConfig(({mode}) => {
   return {
     base: '/Multiview-Golf-Swing-Analysis-and-Correction-using-Deep-Learning-Base-Post-Estimation/',
     plugins: [react(), tailwindcss()],
-    build: {
-      outDir: '../docs',
-      emptyOutDir: true,
-    },
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },
