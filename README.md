@@ -1,6 +1,6 @@
 # Multiview Golf Swing Analysis and Correction using Deep Learning-based Pose Estimation
 
-**Live Demo:** [https://asfand6417.github.io/Multiview-Golf-Swing-Analysis-and-Correction-using-Deep-Learning-Base-Post-Estimation/](https://asfand6417.github.io/Multiview-Golf-Swing-Analysis-and-Correction-using-Deep-Learning-Base-Post-Estimation/)
+🚀 **Live Demo:** [Check out the live web app here!](https://asfand6417.github.io/Multiview-Golf-Swing-Analysis-and-Correction-using-Deep-Learning-Base-Post-Estimation/)
 
 ## Overview
 A state-of-the-art multiview pose estimation system that analyzes your golf swing with surgical precision using deep neural networks (CNN-LSTM).
