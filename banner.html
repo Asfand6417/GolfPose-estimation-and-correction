@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<style>
+    @font-face {
+        font-family: 'Noto Nastaliq Urdu';
+        src: local('Noto Nastaliq Urdu');
+    }
+    @page {
+        size: 33in 33in; /* standard banner width and height */
+        margin: 0;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Noto Nastaliq Urdu', serif;
+        background-color: white; /* Clean background to make text clear */
+        width: 70.5in;
+        height: 33in;
+        position: relative;
+        overflow: hidden;
+    }
+    /* Standard layout from image_28.png */
+    .header {
+        text-align: center;
+        padding-top: 0.5in;
+        font-size: 75.0pt;
+        color: #004d40; /* Dark green */
+        line-height: 1.2;
+    }
+    .call-to-action {
+        position: absolute;
+        bottom: 3in;
+        left: 0.5in;
+        font-size: 50.0pt;
+        color: #004d40;
+    }
+    .candidates {
+        position: absolute;
+        bottom: 0.5in;
+        right: 0.5in;
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5in;
+    }
+    .main-candidate {
+        font-size: 125.0pt;
+        color: #004d40;
+        font-weight: bold;
+    }
+    .supporting-candidates {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5in;
+        margin-top: 0.5in;
+    }
+    .supporter {
+        text-align: center;
+    }
+    .candidate-img-container {
+        width: 5in;
+        height: 5in;
+        border: 20px solid #c5a059; /* Gold border */
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto;
+    }
+    .candidate-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .candidate-name {
+        margin-top: 0.5in;
+        font-size: 40.0pt;
+        color: #004d40;
+    }
+    .hockey-stick-container {
+        position: absolute;
+        bottom: 0.5in;
+        left: 0.5in;
+        display: flex;
+        align-items: center;
+        gap: 0.5in;
+    }
+    .hockey-stick {
+        width: 3in;
+        height: 6in;
+    }
+    .symbol-text {
+        font-size: 30.0pt;
+        color: #555;
+    }
+    .decoration-corners {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(45deg, #c5a059 10%, transparent 10%),
+            linear-gradient(-45deg, #c5a059 10%, transparent 10%),
+            linear-gradient(135deg, #c5a059 10%, transparent 10%),
+            linear-gradient(-135deg, #c5a059 10%, transparent 10%);
+        background-position: top left, top right, bottom left, bottom right;
+        background-size: 3in 3in;
+        background-repeat: no-repeat;
+        pointer-events: none; /* Let clicks pass through */
+    }
+</style>
+</head>
+<body>
+    <div class="decoration-corners"></div>
+    <div class="header">
+        مظفرآباد کے محنت کش ترقی کریں گے جب ووٹر باشعور ہو گا<br>
+        مزدور محنت کشوں کی آواز
+    </div>
+    <div class="call-to-action">
+        آپ کے ووٹ کا صحیح حقدار
+    </div>
+    <div class="candidates">
+        <div class="main-candidate">سید زاہد حسین شاہ کاظمی</div>
+        <div style="font-size: 50.0pt; color: #c5a059; font-weight: bold;">آزاد امیدوار</div>
+        <div style="font-size: 40.0pt; color: #555;">حلقہ 3 مظفرآباد قانون ساز اسمبلی آزاد کشمیر</div>
+        <div class="supporting-candidates">
+            <div class="supporter">
+                <div class="candidate-img-container"><img src="" alt="Malik Ahmad Awan" class="candidate-img"></div>
+                <div class="candidate-name">ملک احمد اعوان</div>
+            </div>
+            <div class="supporter">
+                <div class="candidate-img-container"><img src="" alt="Taimoor Awan" class="candidate-img"></div>
+                <div class="candidate-name">تیمور اعوان</div>
+            </div>
+            <div class="supporter">
+                <div class="candidate-img-container"><img src="" alt="Toseef Mughal" class="candidate-img"></div>
+                <div class="candidate-name">توصیف مغل</div>
+            </div>
+            <div class="supporter">
+                <div class="candidate-img-container"><img src="" alt="Adeel Hashimi" class="candidate-img"></div>
+                <div class="candidate-name">عدیل ہاشمی</div>
+            </div>
+        </div>
+    </div>
+    <div class="hockey-stick-container">
+        <!-- Assuming I can render a placeholder for the hockey stick -->
+        <img src="" alt="Hockey Stick" class="hockey-stick">
+        <div class="symbol-text">
+            انتخابی نشان<br>
+            ہاکی اور گیند
+        </div>
+    </div>
+</body>
+</html>
